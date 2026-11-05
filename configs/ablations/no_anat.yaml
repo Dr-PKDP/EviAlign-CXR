@@ -1,0 +1,3 @@
+base: ../main.yaml
+output_dir: runs/abl_no_anat
+loss: {w_anat: 0.0}

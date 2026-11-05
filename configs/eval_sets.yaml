@@ -1,0 +1,11 @@
+# External sets (all split='test'); paths relative to the repo. Remove sets you have not prepared.
+sets:
+  - {name: rexgradient_test, manifest: manifests/rexgradient.csv, split: test}
+  - {name: nih_test, manifest: manifests/nih.csv, split: test}
+  - {name: chestxdet, manifest: manifests/chestxdet.csv, split: test}
+  - {name: rsna, manifest: manifests/rsna.csv, split: test}
+  - {name: iu, manifest: manifests/iu.csv, split: test}
+  - {name: shenzhen, manifest: manifests/shenzhen.csv, split: test}
+  - {name: montgomery, manifest: manifests/montgomery.csv, split: test}
+  - {name: tbx11k_val, manifest: manifests/tbx11k.csv, split: test}
+  # - {name: vindr, manifest: manifests/vindr.csv, split: test}   # click-through licence (Kaggle/vindr.ai)

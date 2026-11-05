@@ -1,0 +1,4 @@
+# VLM without any XAI guidance (LM loss + classification only)
+base: ../main.yaml
+output_dir: runs/plain_vlm
+loss: {w_align: 0.0, w_inst: 0.0, w_anat: 0.0, w_suff: 0.0, w_comp: 0.0}

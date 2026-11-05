@@ -1,0 +1,4 @@
+# CAMANet-style control: one class-agnostic evidence map aligned with the mean attention of all tokens
+base: ../main.yaml
+output_dir: runs/abl_aggregate
+loss: {align_granularity: aggregate, w_inst: 0.0}

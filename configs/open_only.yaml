@@ -1,0 +1,7 @@
+# Strictly-open configuration: NIH ChestX-ray14 training, label-derived explanation targets.
+base: main.yaml
+output_dir: runs/open_only
+data:
+  train_manifest: manifests/nih_templates.csv
+  val_manifest: manifests/nih_templates.csv
+  target_mode: findings

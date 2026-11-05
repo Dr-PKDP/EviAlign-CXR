@@ -1,0 +1,3 @@
+base: ../main.yaml
+output_dir: runs/abl_no_inst
+loss: {w_inst: 0.0}

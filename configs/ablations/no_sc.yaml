@@ -1,0 +1,3 @@
+base: ../main.yaml
+output_dir: runs/abl_no_sc
+loss: {w_suff: 0.0, w_comp: 0.0}

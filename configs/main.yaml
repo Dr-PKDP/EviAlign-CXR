@@ -1,0 +1,63 @@
+# EviAlign-CXR, main configuration: train on ReXGradient-160K, evaluate on fully open external corpora.
+seed: 0
+output_dir: runs/main
+data:
+  train_manifest: manifests/rexgradient.csv
+  val_manifest: manifests/rexgradient.csv
+  train_split: train
+  val_split: val
+  image_size: 448
+  classes: [atelectasis, cardiomegaly, consolidation, edema, pleural_effusion, pneumonia, pneumothorax,
+            nodule_mass, lung_opacity, emphysema, fibrosis, pleural_thickening, hernia]
+  target_mode: evidence          # explanation target = report sentences that assert a finding
+  max_text_len: 128
+  num_workers: 12
+model:
+  backbone: timm:vit_base_patch14_dinov2.lvd142m   # natural-image pretraining: no exposure to any test corpus
+  pretrained: true
+  grad_ckpt: true
+  head_dim: 256
+  head_heads: 4
+  memory_grid: 16                 # 32x32 encoder tokens pooled to 16x16 visual tokens for the decoder
+  decoder_detach_memory: true     # decoder losses never update the encoder (classifier is the teacher)
+  decoder:
+    type: prefix_llm
+    lm_name: Qwen/Qwen2.5-1.5B-Instruct
+    lora_r: 16
+    n_ground_layers: 4
+    prompt: "Findings:"
+    dtype: bfloat16
+train:
+  epochs: 12
+  batch_size: 32
+  eval_batch_size: 64
+  grad_accum: 1
+  lr_encoder: 1.0e-5
+  lr_head: 1.0e-3
+  lr_decoder: 2.0e-4
+  weight_decay: 0.05
+  warmup_steps: 1000
+  amp: bf16
+  clip: 1.0
+  log_every: 50
+  stages: {cls_only_epochs: 2, align_start_epoch: 4, align_ramp_epochs: 2, sc_start_epoch: 4, anat_start_epoch: 0}
+  select_from_epoch: 6
+loss:
+  w_cls: 1.0
+  use_pos_weight: true
+  pos_weight_cap: 10.0
+  w_lm: 1.0
+  w_align: 0.5
+  align_kind: js
+  align_stop_grad: true
+  align_granularity: finding
+  w_inst: 0.1
+  inst_tau: 0.1
+  w_anat: 0.5
+  anat_dilate: 1
+  w_suff: 0.1
+  w_comp: 0.1
+  sc_every: 4
+  sc_frac: 0.15
+  sc_margin: 1.0
+  sc_sigma: 8.0
