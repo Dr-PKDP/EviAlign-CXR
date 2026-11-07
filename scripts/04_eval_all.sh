@@ -8,7 +8,7 @@
 set -e
 export PROJ=/data/pduttapramanik/xai_vlm_cxr; export HF_HOME=$PROJ/hf_cache
 source $PROJ/miniconda3/bin/activate evialign
-cd $PROJ/evialign-cxr && mkdir -p logs results
+ulimit -n 65535 2>/dev/null; cd $PROJ/evialign-cxr && mkdir -p logs results
 F="--decode forced --force_spec 0.9"
 ev () { # run subdir [extra args] ; skipped when summary.json exists
   local r=$1 d=runs/$1/$2; shift 2

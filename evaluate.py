@@ -16,7 +16,15 @@ import pandas as pd
 import torch
 import torch.nn.functional as F
 import yaml
+import resource
 from torch.utils.data import DataLoader
+
+try:   # many sets x many workers exhaust the default open-file limit
+    _soft, _hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+    resource.setrlimit(resource.RLIMIT_NOFILE, (_hard, _hard))
+except (ValueError, OSError):
+    pass
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 from evialign.attribution import gradcam_tokens, integrated_gradients
 from evialign.data import Collator, ManifestDataset, mentioned_findings

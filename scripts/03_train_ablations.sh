@@ -5,7 +5,7 @@
 set -e
 export PROJ=/data/pduttapramanik/xai_vlm_cxr; export HF_HOME=$PROJ/hf_cache
 source $PROJ/miniconda3/bin/activate evialign
-cd $PROJ/evialign-cxr && mkdir -p logs
+ulimit -n 65535 2>/dev/null; cd $PROJ/evialign-cxr && mkdir -p logs
 SMALL="data.max_train_items=30000 data.max_val_items=3000 train.epochs=6 train.select_from_epoch=3 train.warmup_steps=300 \
 train.stages.cls_only_epochs=1 train.stages.align_start_epoch=2 train.stages.align_ramp_epochs=1 train.stages.sc_start_epoch=2"
 run () { # config name [extra overrides]
