@@ -11,9 +11,9 @@ source $PROJ/miniconda3/bin/activate evialign
 ulimit -n 65535 2>/dev/null; cd $PROJ/evialign-cxr && mkdir -p logs results
 F="--decode forced --force_spec 0.9"
 ev () { # run subdir [extra args] ; skipped when summary.json exists
-  local r=$1 d=runs/$1/$2; shift 2
+  local r=$1 n=$2 d=runs/$1/$2; shift 2
   [ -f runs/$r/best.pt ] && [ ! -f $d/summary.json ] && \
-    CUDA_VISIBLE_DEVICES=${GPU:-0} python evaluate.py --ckpt runs/$r/best.pt --sets configs/eval_sets.yaml --out $d "$@" > logs/eval_${r}_$2.log 2>&1 || true
+    CUDA_VISIBLE_DEVICES=${GPU:-0} python evaluate.py --ckpt runs/$r/best.pt --sets configs/eval_sets.yaml --out $d "$@" > logs/eval_${r}_${n}.log 2>&1 || true
 }
 # order: matched comparisons first, so partial results are already interpretable
 RUNS="s_main s_no_align s_no_sc s_plain s_no_inst s_no_anat s_aggregate_align s_bidirectional s_kl_ba s_joint_encoder s_crossattn_gpt2 s_biomedclip_backbone s_main_s1 s_main_s2 s_plain_s1 s_plain_s2"
