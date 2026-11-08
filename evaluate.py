@@ -381,6 +381,9 @@ def main():
     if args.resume and os.path.exists(sp):
         allsum = json.load(open(sp))
     for s in sets:
+        if not os.path.exists(s["manifest"]):
+            print(f"== {s['name']} (manifest {s['manifest']} not found, skipped)", flush=True)
+            continue
         if s["name"] in allsum and args.resume:
             print(f"== {s['name']} (done, skipped)", flush=True)
             continue
