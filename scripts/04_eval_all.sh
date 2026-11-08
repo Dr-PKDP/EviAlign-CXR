@@ -26,7 +26,9 @@ ev plain_vlm eval $ALLS $F --del_ins
 RUNS="s_main s_no_align s_no_sc s_plain s_no_inst s_no_anat s_aggregate_align s_bidirectional s_kl_ba s_joint_encoder s_crossattn_gpt2 s_biomedclip_backbone s_main_s1 s_main_s2 s_plain_s1 s_plain_s2"
 for r in main plain_vlm $RUNS; do
   ev $r eval_noise $SUB $F --infill noise --del_frac 0.15
-  case $r in s_*) ev $r eval_sub $SUB $F --del_ins;; esac
+done
+for r in $RUNS; do
+  ev $r eval_sub $SUB $F --del_ins
 done
 ev s_classifier_only eval $SUB
 # 3. unseen-operator checks and free text for the full models
