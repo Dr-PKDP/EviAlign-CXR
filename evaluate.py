@@ -330,7 +330,8 @@ def main():
     ap.add_argument("--del_ins_every", type=int, default=10)
     ap.add_argument("--del_steps", type=int, default=10)
     ap.add_argument("--save_maps", type=int, default=64)
-    ap.add_argument("--max_batches", type=int, default=0)
+    ap.add_argument("--max_batches", type=int, default=0, help="evaluate only the first N batches of each set (fixed, deterministic subset)")
+    ap.add_argument("--resume", action="store_true", help="skip sets already present in <out>/summary.json")
     ap.add_argument("--no_text", action="store_true", help="skip the decoder (classifier-only evaluation)")
     ap.add_argument("--template_text", action="store_true", help="template explanations from predictions (baseline)")
     args = ap.parse_args()
@@ -376,7 +377,13 @@ def main():
     if args.force_spec > 0:
         args.th_force = np.array(json.load(open(ths_path)))
     allsum = {}
+    sp = os.path.join(args.out, "summary.json")
+    if args.resume and os.path.exists(sp):
+        allsum = json.load(open(sp))
     for s in sets:
+        if s["name"] in allsum and args.resume:
+            print(f"== {s['name']} (done, skipped)", flush=True)
+            continue
         print(f"== {s['name']}", flush=True)
         allsum[s["name"]] = run_set(model, cfg, s, device, th, args.out, args)
         with open(os.path.join(args.out, "summary.json"), "w") as f:
