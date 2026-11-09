@@ -23,7 +23,7 @@ ev main eval $ALLS $F --del_ins
 ev classifier_only eval $ALLS --del_ins
 ev plain_vlm eval $ALLS $F --del_ins
 # 2. matched comparisons on the fixed subset, noise infill first (the evidence that is not circular)
-RUNS="s_main s_no_align s_no_sc s_plain s_no_inst s_no_anat s_aggregate_align s_bidirectional s_kl_ba s_joint_encoder s_crossattn_gpt2 s_biomedclip_backbone s_main_s1 s_main_s2 s_plain_s1 s_plain_s2"
+RUNS="s_main s_no_align s_no_sc s_plain s_no_inst s_no_anat s_aggregate_align s_bidirectional s_kl_ba s_joint_encoder s_crossattn_gpt2 s_biomedclip_backbone s_main_s1 s_no_align_s1 s_plain_s1 s_main_s2 s_no_align_s2 s_plain_s2"
 for r in main plain_vlm $RUNS; do
   ev $r eval_noise $SUB $F --infill noise --del_frac 0.15
 done
