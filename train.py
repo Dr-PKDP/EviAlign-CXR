@@ -184,7 +184,15 @@ def main():
                 continue
             (L["total"] / T.get("grad_accum", 1)).backward()
             if (it + 1) % T.get("grad_accum", 1) == 0:
-                torch.nn.utils.clip_grad_norm_(core.parameters(), T.get("clip", 1.0))
+                gnorm = torch.nn.utils.clip_grad_norm_(core.parameters(), T.get("clip", 1.0))
+                if not torch.isfinite(gnorm):
+                    # finite loss, non-finite gradient (e.g. 0/0 in a normalisation backward): drop the update
+                    opt.zero_grad(set_to_none=True)
+                    n_skipped += 1
+                    if rank == 0 and n_skipped <= 20:
+                        print(json.dumps({"epoch": round(frac_epoch, 3), "step": step, "skipped_nonfinite_grad": n_skipped,
+                                          **{k: float(v) for k, v in L.items() if not k.startswith("_")}}), flush=True)
+                    continue
                 opt.step(), sched.step(), opt.zero_grad(set_to_none=True)
                 step += 1
             if rank == 0 and it % T.get("log_every", 50) == 0:
