@@ -48,11 +48,13 @@ def text_grounding(att: torch.Tensor, tok_mask: torch.Tensor) -> tuple[torch.Ten
 
 
 def js_div(p: torch.Tensor, q: torch.Tensor) -> torch.Tensor:
+    p, q = p.clamp_min(1e-12), q.clamp_min(1e-12)
     m = 0.5 * (p + q)
     return 0.5 * (p * (p / m).log()).sum(-1) + 0.5 * (q * (q / m).log()).sum(-1)
 
 
 def kl_div(p: torch.Tensor, q: torch.Tensor) -> torch.Tensor:
+    p, q = p.clamp_min(1e-12), q.clamp_min(1e-12)
     return (p * (p / q).log()).sum(-1)
 
 

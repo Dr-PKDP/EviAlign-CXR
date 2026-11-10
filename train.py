@@ -89,7 +89,12 @@ def validate(model, loader, device, classes, amp_dtype, max_batches=None):
         Mk.append(b["y_mask"].numpy())
         G += b["patient_id"]
     model.train()
-    return classification_report(np.concatenate(Y), np.concatenate(Mk), np.concatenate(P), classes, G, n_boot=0)
+    P = np.concatenate(P)
+    bad = float((~np.isfinite(P)).mean())
+    rep = classification_report(np.concatenate(Y), np.concatenate(Mk), np.nan_to_num(P, nan=0.5, posinf=1.0, neginf=0.0),
+                                classes, G, n_boot=0)
+    rep["nonfinite_frac"] = bad      # a diverged run is recorded and does not kill the queue
+    return rep
 
 
 def main():
@@ -157,7 +162,7 @@ def main():
         start_epoch, best = ck["epoch"] + 1, ck.get("best", -1.0)
 
     log = open(os.path.join(out_dir, "log.jsonl"), "a") if rank == 0 else None
-    step = 0
+    step, n_skipped = 0, 0
     for epoch in range(start_epoch, T["epochs"]):
         if sampler:
             sampler.set_epoch(epoch)
@@ -170,6 +175,13 @@ def main():
             b = {k: (v.to(device, non_blocking=True) if torch.is_tensor(v) else v) for k, v in b.items()}
             with torch.autocast(device.type, dtype=amp_dtype, enabled=amp_dtype is not None):
                 L = obj(b, w)
+            if not torch.isfinite(L["total"]):
+                opt.zero_grad(set_to_none=True)
+                n_skipped += 1
+                if rank == 0 and n_skipped <= 20:
+                    print(json.dumps({"epoch": round(frac_epoch, 3), "step": step, "skipped_nonfinite": n_skipped,
+                                      **{k: float(v) for k, v in L.items() if not k.startswith("_")}}), flush=True)
+                continue
             (L["total"] / T.get("grad_accum", 1)).backward()
             if (it + 1) % T.get("grad_accum", 1) == 0:
                 torch.nn.utils.clip_grad_norm_(core.parameters(), T.get("clip", 1.0))
@@ -186,7 +198,8 @@ def main():
         if rank == 0:
             rep = validate(core, vl, device, classes, amp_dtype, T.get("val_max_batches"))
             auc = rep["macro"]["auroc"]
-            rec = {"epoch": epoch, "val_macro_auroc": auc, "val_per_class": {k: v["auroc"] for k, v in rep["per_class"].items()}}
+            rec = {"epoch": epoch, "val_macro_auroc": auc, "nonfinite_frac": rep.get("nonfinite_frac", 0.0),
+                   "skipped_nonfinite": n_skipped, "val_per_class": {k: v["auroc"] for k, v in rep["per_class"].items()}}
             print(json.dumps(rec), flush=True)
             log.write(json.dumps(rec) + "\n"), log.flush()
             ck = {"model": core.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "epoch": epoch,

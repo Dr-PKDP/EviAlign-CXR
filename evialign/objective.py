@@ -43,6 +43,7 @@ class Objective(nn.Module):
                     wy = (y * ym)[..., None]
                     a_agg = (a_mem * wy).sum(1, keepdim=True) / wy.sum(1, keepdim=True).clamp_min(1e-8)
                     a_agg = a_agg / a_agg.sum(-1, keepdim=True).clamp_min(1e-8)
+                    a_agg = (1 - 1e-3) * a_agg + 1e-3 / a_agg.shape[-1]   # same floor as the per-finding maps
                     tok_all = batch["tgt_attn"][:, None, :].float()
                     b, valid = text_grounding(out["grounding"], tok_all)
                     valid = valid & ((y * ym).sum(1, keepdim=True) > 0)
@@ -51,9 +52,10 @@ class Objective(nn.Module):
                     b, valid = text_grounding(out["grounding"], tok)
                     valid = valid & (y > 0.5) & (ym > 0)
                     a_use = a_mem
-                L["align"] = alignment_loss(a_use, b, valid, cfg.get("align_kind", "js"), cfg.get("align_stop_grad", True))
+                L["align"] = (alignment_loss(a_use, b, valid, cfg.get("align_kind", "js"), cfg.get("align_stop_grad", True))
+                              if w["align"] > 0 else zero)
                 L["inst"] = (instance_grounding_contrast(a_use, b, valid, cfg.get("inst_tau", 0.1), cfg.get("align_stop_grad", True))
-                             if a_use.shape[1] > 0 else zero)
+                             if w["inst"] > 0 and a_use.shape[1] > 0 else zero)
                 L["n_align_pairs"] = valid.sum().float().detach()
         if w["anat"] > 0:
             prior = region_prior(batch["anat"], g, self.regions, cfg.get("anat_dilate", 1))
