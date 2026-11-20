@@ -1,0 +1,4 @@
+# decoder losses (LM, alignment, instance) also update the shared encoder
+base: ../main.yaml
+output_dir: runs/abl_joint_encoder
+model: {decoder_detach_memory: false}

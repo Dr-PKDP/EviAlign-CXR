@@ -1,0 +1,48 @@
+quantity,value
+reports,20000
+sentences asserting one modelled finding,12364
+sentences asserting more than one modelled finding,2342
+share of asserting sentences with more than one finding,0.1593
+alignment pairs,16543
+pairs exposed to multi-finding sentences,4894
+share exposed,0.2958
+pairs whose sentence set is identical to another finding's,4259
+share identical,0.2575
+reports with at least one exposed pair,2192
+reports with at least one identical pair,1946
+labeler-only findings outside the modelled classes (pairs),688
+classes outside the modelled space,fracture
+"exposed share, atelectasis",0.3807
+"identical share, atelectasis",0.3365
+"exposed share, cardiomegaly",0.0877
+"identical share, cardiomegaly",0.0824
+"exposed share, consolidation",0.6225
+"identical share, consolidation",0.5221
+"exposed share, edema",0.3842
+"identical share, edema",0.3509
+"exposed share, pleural_effusion",0.3549
+"identical share, pleural_effusion",0.3034
+"exposed share, pneumonia",0.7324
+"identical share, pneumonia",0.6667
+"exposed share, pneumothorax",0.1208
+"identical share, pneumothorax",0.1057
+"exposed share, nodule_mass",0.3233
+"identical share, nodule_mass",0.2505
+"exposed share, lung_opacity",0.3553
+"identical share, lung_opacity",0.2926
+"exposed share, emphysema",0.0655
+"identical share, emphysema",0.0589
+"exposed share, fibrosis",0.4301
+"identical share, fibrosis",0.3976
+"exposed share, pleural_thickening",0.2484
+"identical share, pleural_thickening",0.2293
+"exposed share, hernia",0.0683
+"identical share, hernia",0.0621
+"co-asserted in one sentence, atelectasis + lung_opacity",472
+"co-asserted in one sentence, atelectasis + pleural_effusion",316
+"co-asserted in one sentence, lung_opacity + pleural_effusion",293
+"co-asserted in one sentence, cardiomegaly + edema",232
+"co-asserted in one sentence, atelectasis + fibrosis",226
+"co-asserted in one sentence, lung_opacity + pneumonia",225
+"co-asserted in one sentence, edema + lung_opacity",140
+"co-asserted in one sentence, lung_opacity + nodule_mass",136

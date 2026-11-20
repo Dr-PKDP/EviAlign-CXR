@@ -1,0 +1,4 @@
+# lightweight decoder with explicit cross-attention (sensitivity of grounding to decoder family)
+base: ../main.yaml
+output_dir: runs/abl_crossattn
+model: {decoder: {type: crossattn, lm_name: gpt2, n_ground_layers: 2}}

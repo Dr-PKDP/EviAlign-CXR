@@ -1,0 +1,48 @@
+# CPU smoke test on synthetic data (tests/make_synthetic.py). Random-initialised tiny networks.
+seed: 0
+output_dir: /tmp/evialign_smoke/run
+data:
+  train_manifest: /tmp/evialign_smoke/data/train.csv
+  val_manifest: /tmp/evialign_smoke/data/train.csv
+  image_size: 64
+  classes: [pleural_effusion, consolidation, cardiomegaly, nodule_mass, pneumothorax]
+  target_mode: evidence
+  max_text_len: 32
+  num_workers: 0
+model:
+  backbone: timm:vit_tiny_patch16_224
+  pretrained: false
+  timm_kwargs: {patch_size: 8, depth: 4}
+  head_dim: 64
+  head_heads: 2
+  memory_grid: 4
+  decoder:
+    type: crossattn
+    n_ground_layers: 2
+    tiny_config: {n_embd: 64, n_layer: 2, n_head: 2, n_positions: 64}
+train:
+  epochs: 6
+  select_from_epoch: 3
+  batch_size: 16
+  lr_encoder: 3.0e-4
+  lr_head: 1.0e-3
+  lr_decoder: 1.0e-3
+  warmup_steps: 10
+  log_every: 10
+  stages: {cls_only_epochs: 1, align_start_epoch: 2, align_ramp_epochs: 1, sc_start_epoch: 2}
+loss:
+  w_cls: 1.0
+  w_lm: 1.0
+  w_align: 1.0
+  align_kind: js
+  align_stop_grad: true
+  align_granularity: finding
+  w_inst: 0.2
+  inst_tau: 0.1
+  w_anat: 0.5
+  w_suff: 0.1
+  w_comp: 0.1
+  sc_every: 2
+  sc_frac: 0.15
+  sc_margin: 1.0
+  sc_sigma: 3.0

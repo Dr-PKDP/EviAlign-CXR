@@ -1,0 +1,13 @@
+table_in_paper,content,runs,evaluation_outputs,produced_by
+Table 5,Macro-AUROC with patient-level bootstrap,"runs/main runs/plain_vlm runs/classifier_only (full protocol)",runs/*/eval/summary.json,scripts/04_eval_all.sh; tools/make_tables.py
+Table 6,Prediction-explanation consistency and text metrics,"runs/main runs/plain_vlm (free and finding-conditioned decoding); zero-shot and template baselines",runs/*/eval_free (free generation); runs/*/eval (finding-conditioned); runs/classifier_only/eval_template and eval_template_gated; runs/zs*/eval_zs,scripts/04_eval_all.sh; tools/make_tables.py
+Table 7,Counterfactual faithfulness under noise infill,"full protocol: runs/main runs/plain_vlm; reduced protocol: runs/s_* (three seeds for main, no-alignment and unguided)",runs/*/eval_noise/faithfulness_*.csv (fixed 3200-image prefix); runs/*/eval_noise_full/faithfulness_*.csv (uncapped pairs),scripts/04_eval_all.sh; scripts/09_uncapped_counterfactuals_and_tables.sh; tools/make_tables.py
+Table 8,Localisation against boxes,"runs/main runs/plain_vlm runs/classifier_only",runs/*/eval/localisation_*.csv; runs/*/eval_tb/localisation_*.csv,scripts/04_eval_all.sh; tools/analysis_tables.py; tools/localisation_priors.py
+Table 9,Ablations,runs/s_* (reduced protocol),runs/s_*/eval_noise/,scripts/03_train_ablations.sh; scripts/03_train_seeds.sh; tools/make_tables.py
+Supplementary sentence statistics,Sharing of sentences between findings,none (ReXGradient training reports),results/analysis/sentence_sharing.csv,tools/sentence_stats.py
+Supplementary tuberculosis intervals,Image-clustered intervals,runs/main runs/plain_vlm,runs/*/eval_tb/faithfulness_*.csv; results/analysis/tb_clustered.csv,tools/analysis_tables.py
+Supplementary gate and operating points,Gate transfer and per-finding metrics,runs/main runs/plain_vlm,results/analysis/gate_external.csv; results/analysis/per_finding_metrics.csv,tools/analysis_tables.py
+Supplementary ledger,Counts after each filter,runs/main runs/plain_vlm,results/analysis/ledger.csv,tools/analysis_tables.py
+Supplementary ECS split,Uncapped pass with forced-opening and continuation ECS,runs/main runs/plain_vlm,runs/*/eval_noise_full/faithfulness_*.csv; results/analysis/uncapped_ecs_split_summary.csv,scripts/09_uncapped_counterfactuals_and_tables.sh
+Supplementary pointing baselines,Attention sink and prior maps,runs/main runs/plain_vlm,results/analysis/attention_sink.csv; results/analysis/prior_baselines.csv,tools/localisation_priors.py
+Supplementary Integrated Gradients check and calibration,Convergence of Integrated Gradients and reliability bins,runs/main,results/analysis/ig_check.csv; results/analysis/calibration_summary.csv,scripts/10_calibration_and_integrated_gradients.sh

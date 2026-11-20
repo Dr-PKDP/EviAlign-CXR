@@ -1,0 +1,7 @@
+run,set,maps,distinct_peak_tokens,modal_peak_share,modal_token_row,modal_token_col,grid,mass_on_top5_tokens,cosine_to_mean_map
+main,chestxdet,33,25,0.091,12,2,16,0.275,0.617
+main,nih_test,32,23,0.156,8,9,16,0.359,0.631
+main,rsna,21,16,0.143,10,5,16,0.203,0.757
+plain_vlm,chestxdet,38,1,1.0,0,0,16,0.884,1.0
+plain_vlm,nih_test,31,1,1.0,0,0,16,0.862,1.0
+plain_vlm,rsna,15,1,1.0,0,0,16,0.885,1.0

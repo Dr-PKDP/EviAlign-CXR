@@ -1,0 +1,3 @@
+sets:
+  - {name: nih_test, manifest: manifests/nih.csv, split: test}
+  - {name: chestxdet, manifest: manifests/chestxdet.csv, split: test}
