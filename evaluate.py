@@ -132,6 +132,16 @@ def forced_explanations(model, tok, mem, prob, thresholds, classes, k, device, m
     return out
 
 
+def make_infill(x, op):
+    """Removal baseline: blur (the regulariser's operator), flat image mean, or Gaussian noise with the image's mean and std."""
+    if op == "mean":
+        return x.mean((1, 2, 3), keepdim=True).expand_as(x).contiguous()
+    if op == "noise":
+        gn = torch.Generator(device=x.device).manual_seed(0)
+        return x.mean((1, 2, 3), keepdim=True) + x.std((1, 2, 3), keepdim=True) * torch.randn(x.shape, device=x.device, generator=gn)
+    return gaussian_blur(x, sigma=x.shape[-1] / 40)
+
+
 @torch.no_grad()
 def run_set(model, cfg, s, device, thresholds, out_dir, args):
     classes = cfg["data"]["classes"]
@@ -143,7 +153,9 @@ def run_set(model, cfg, s, device, thresholds, out_dir, args):
     mem_g = model.mem_grid
     frac = args.del_frac
     gen = torch.Generator().manual_seed(0)
-    Y, MK, P, G, rows, loc, faith, di = [], [], [], [], [], [], [], []
+    ops = [o.strip() for o in args.infill_multi.split(",")] if args.infill_multi else [args.infill]
+    Y, MK, P, G, rows, loc, di = [], [], [], [], [], [], []
+    faith = {o: [] for o in ops}
     keep_maps = {"idx": [], "evidence": [], "gradcam": [], "text": [], "cls": []}
     abn_col = "y_abnormal" if "y_abnormal" in ds.df.columns else None
     for bi, b in enumerate(dl):
@@ -191,20 +203,16 @@ def run_set(model, cfg, s, device, thresholds, out_dir, args):
             with torch.autocast(device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
                 grd = model.decoder.ground(mem, tid, tam)
             b_txt, valid = text_grounding(grd.float(), tm)
-        blurred = gaussian_blur(x, sigma=x.shape[-1] / 40)
-        if args.infill == "mean":      # removal baseline unseen in training: flat image mean
-            blurred = x.mean((1, 2, 3), keepdim=True).expand_as(x).contiguous()
-        elif args.infill == "noise":   # removal baseline unseen in training: Gaussian noise with the image's mean and std
-            gn = torch.Generator(device=x.device).manual_seed(0)
-            blurred = x.mean((1, 2, 3), keepdim=True) + x.std((1, 2, 3), keepdim=True) * torch.randn(x.shape, device=x.device, generator=gn)
 
         # ---------------- faithfulness: text-guided deletion (TGD) and explanation counterfactual sensitivity (ECS)
+        # The explanation, its grounding and the eligible pairs are fixed once per batch; every removal operator in `ops` is then
+        # applied to exactly those objects. ECS compares evidence removal with the mean over args.n_random_ecs random removals.
         if has_dec:
             pairs = [(i, c) for i in range(B) for c in range(len(classes)) if valid[i, c] and pred[i, c]][: args.max_pairs_per_batch]
             if pairs:
                 ii = torch.tensor([p[0] for p in pairs], device=device)
                 cc = torch.tensor([p[1] for p in pairs], device=device)
-                xs, bl = x[ii], blurred[ii]
+                xs = x[ii]
 
                 def score(xx, chunk=64):
                     out = []
@@ -215,12 +223,8 @@ def run_set(model, cfg, s, device, thresholds, out_dir, args):
                         out.append(lg[torch.arange(lg.shape[0]), cc[sl]])
                     return torch.cat(out)
                 s0 = logits[ii, cc]
-                d_text = s0 - score(remove_topk(xs, b_txt[ii, cc], frac, mem_g, bl))
-                d_evid = s0 - score(remove_topk(xs, a_mem[ii, cc], frac, mem_g, bl))
                 keys = ((np.array([int(b["idx"][p[0]]) for p in pairs]), np.array([p[1] for p in pairs]))
                         if args.rand_key else None)
-                d_rand = torch.stack([s0 - score(remove_random(xs, mem_g * mem_g, frac, mem_g, bl, gen, keys, r))
-                                      for r in range(args.n_random)]).mean(0)
                 # ECS: log-likelihood of the sentence(s) asserting c, before vs after removing c's evidence
                 tid_p, tam_p, tm_p = tid[ii], tam[ii], tm[ii, cc]
                 mk_op = tm_op[ii, cc] if tm_op is not None else None
@@ -240,20 +244,32 @@ def run_set(model, cfg, s, device, thresholds, out_dir, args):
                             row.append((lp * mk).sum(1) / mk.sum(1).clamp_min(1) if mk is not None else None)
                         parts.append(row)
                     return [torch.cat([p[k] for p in parts]) if parts[0][k] is not None else None for k in range(3)]
-                x_ev = remove_topk(xs, a_mem[ii, cc], frac, mem_g, bl)
-                x_rd = remove_random(xs, mem_g * mem_g, frac, mem_g, bl, gen, keys, args.n_random)
                 lp0, lp0_op, lp0_co = sent_lp(xs)
-                lp_ev, lpe_op, lpe_co = sent_lp(x_ev)
-                lp_rd, lpr_op, lpr_co = sent_lp(x_rd)
                 js = js_div(a_mem[ii, cc], b_txt[ii, cc])
-                for k, (i, c) in enumerate(pairs):
-                    faith.append({"img": int(b["idx"][i]), "cls": classes[c], "d_text": float(d_text[k]), "d_evid": float(d_evid[k]),
-                                  "d_rand": float(d_rand[k]), "ecs_evid": float(lp0[k] - lp_ev[k]),
-                                  "ecs_rand": float(lp0[k] - lp_rd[k]), "js": float(js[k]),
-                                  **({"n_tok": int(tm_p[k].sum()), "n_open": int(mk_op[k].sum()), "n_cont": int(mk_co[k].sum()),
-                                      "ecs_evid_open": float(lp0_op[k] - lpe_op[k]), "ecs_rand_open": float(lp0_op[k] - lpr_op[k]),
-                                      "ecs_evid_cont": float(lp0_co[k] - lpe_co[k]), "ecs_rand_cont": float(lp0_co[k] - lpr_co[k])}
-                                     if mk_co is not None else {})})
+                for op in ops:
+                    bl = make_infill(x, op)[ii]
+                    d_text = s0 - score(remove_topk(xs, b_txt[ii, cc], frac, mem_g, bl))
+                    d_evid = s0 - score(remove_topk(xs, a_mem[ii, cc], frac, mem_g, bl))
+                    d_rand = torch.stack([s0 - score(remove_random(xs, mem_g * mem_g, frac, mem_g, bl, gen, keys, r))
+                                          for r in range(args.n_random)]).mean(0)
+                    lp_ev, lpe_op, lpe_co = sent_lp(remove_topk(xs, a_mem[ii, cc], frac, mem_g, bl))
+                    rnd = [sent_lp(remove_random(xs, mem_g * mem_g, frac, mem_g, bl, gen, keys, args.n_random + r))
+                           for r in range(args.n_ecs_masks)]
+                    mean_lp = [torch.stack([m[k] for m in rnd]).mean(0) if rnd[0][k] is not None else None for k in range(3)]
+                    lp_rd, lpr_op, lpr_co = mean_lp
+                    ecs_masks = torch.stack([lp0 - m[0] for m in rnd])           # one ECS reference per mask
+                    for k, (i, c) in enumerate(pairs):
+                        row = {"img": int(b["idx"][i]), "cls": classes[c], "d_text": float(d_text[k]), "d_evid": float(d_evid[k]),
+                               "d_rand": float(d_rand[k]), "ecs_evid": float(lp0[k] - lp_ev[k]),
+                               "ecs_rand": float(lp0[k] - lp_rd[k]), "js": float(js[k])}
+                        if args.n_ecs_masks > 1:
+                            row["ecs_rand_first"] = float(ecs_masks[0, k])            # the single-mask reference
+                            row["ecs_rand_sd"] = float(ecs_masks[:, k].std())         # spread over the random masks
+                        if mk_co is not None:
+                            row.update({"n_tok": int(tm_p[k].sum()), "n_open": int(mk_op[k].sum()), "n_cont": int(mk_co[k].sum()),
+                                        "ecs_evid_open": float(lp0_op[k] - lpe_op[k]), "ecs_rand_open": float(lp0_op[k] - lpr_op[k]),
+                                        "ecs_evid_cont": float(lp0_co[k] - lpe_co[k]), "ecs_rand_cont": float(lp0_co[k] - lpr_co[k])})
+                        faith[op].append(row)
 
         # ---------------- localisation against boxes
         for i in range(B):
@@ -344,11 +360,15 @@ def run_set(model, cfg, s, device, thresholds, out_dir, args):
         if any(len(r) for r in refs):
             pairs = [(r, h) for r, h in zip(refs, per["generated"]) if r]
             summary["text"] = {"bleu4": corpus_bleu4(*zip(*pairs)), "rougeL": rouge_l(*zip(*pairs)), "n": len(pairs)}
-    if faith:
-        f = pd.DataFrame(faith)
-        f.to_csv(os.path.join(out_dir, f"faithfulness_{s['name']}.csv"), index=False)
+    for oi, op in enumerate(ops):
+        if not faith[op]:
+            continue
+        f = pd.DataFrame(faith[op])
+        f.to_csv(os.path.join(out_dir, f"faithfulness_{s['name']}.csv" if oi == 0 else f"faithfulness_{s['name']}_{op}.csv"), index=False)
+        if len(ops) > 1:
+            f.to_csv(os.path.join(out_dir, f"faithfulness_{s['name']}_{op}.csv"), index=False)
         denom = (f["d_evid"] - f["d_rand"]).mean()
-        summary["faithfulness"] = {
+        fs = {
             "n_pairs": len(f), "tgd_drop_text": f["d_text"].mean(), "tgd_drop_evidence": f["d_evid"].mean(),
             "tgd_drop_random": f["d_rand"].mean(),
             "tgd_normalised": float((f["d_text"].mean() - f["d_rand"].mean()) / denom) if abs(denom) > 1e-8 else None,
@@ -359,9 +379,15 @@ def run_set(model, cfg, s, device, thresholds, out_dir, args):
         ex = (f["d_text"] - f["d_rand"]).values
         eg = (f["ecs_evid"] - f["ecs_rand"]).values
         bs = [rng.integers(0, len(f), len(f)) for _ in range(1000)]
-        summary["faithfulness"]["tgd_excess_drop"] = float(ex.mean())
-        summary["faithfulness"]["tgd_excess_drop_ci"] = [float(v) for v in np.percentile([ex[b].mean() for b in bs], [2.5, 97.5])]
-        summary["faithfulness"]["ecs_gap_ci"] = [float(v) for v in np.percentile([eg[b].mean() for b in bs], [2.5, 97.5])]
+        fs["tgd_excess_drop"] = float(ex.mean())
+        fs["tgd_excess_drop_ci"] = [float(v) for v in np.percentile([ex[b].mean() for b in bs], [2.5, 97.5])]
+        fs["ecs_gap_ci"] = [float(v) for v in np.percentile([eg[b].mean() for b in bs], [2.5, 97.5])]
+        if "ecs_rand_first" in f:
+            fs["ecs_gap_single_mask"] = float((f["ecs_evid"] - f["ecs_rand_first"]).mean())
+        if oi == 0:
+            summary["faithfulness"] = fs
+        if len(ops) > 1:
+            summary.setdefault("faithfulness_by_operator", {})[op] = fs
     if loc:
         l = pd.DataFrame(loc)
         l.to_csv(os.path.join(out_dir, f"localisation_{s['name']}.csv"), index=False)
@@ -397,6 +423,11 @@ def main():
     ap.add_argument("--force_k", type=int, default=3, help="at most this many flagged findings are explained per image (forced decoding)")
     ap.add_argument("--infill", default="blur", choices=["blur", "mean", "noise"],
                     help="removal baseline for TGD/ECS; the training regulariser uses blur, so mean/noise are a check that is not trained for")
+    ap.add_argument("--infill_multi", default="",
+                    help="comma-separated removal operators (blur, mean, noise) applied to one and the same generated explanation, "
+                         "grounding and set of eligible pairs; the first is the primary one and keeps the unsuffixed output files")
+    ap.add_argument("--n_ecs_masks", type=int, default=1,
+                    help="number of independent random removals averaged to form the ECS reference (1 reproduces the single-mask reference of the first runs)")
     ap.add_argument("--max_pairs_per_batch", type=int, default=64,
                     help="cap on scored (image, finding) pairs per batch, taken in image-then-finding order; 512 scores every eligible pair")
     ap.add_argument("--rand_key", action="store_true",

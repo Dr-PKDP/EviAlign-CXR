@@ -14,7 +14,7 @@ tests (text-guided deletion, explanation counterfactual sensitivity) that are no
 evialign/            findings vocabulary, labeler, data, models (encoder, evidence head, decoders), losses, objective, metrics
 evialign/prepare/    corpus adapters -> manifests (ReXGradient-160K, NIH, ChestX-Det10, IU, Shenzhen, Montgomery, TBX11K, RSNA)
 configs/             main.yaml, ablations/*.yaml, evaluation set lists (eval_*.yaml), smoke.yaml
-scripts/             00-02 environment, data download and manifests; 03 training; 04 evaluation; 06-10 further analyses
+scripts/             00-02 environment, data download and manifests; 03 training; 04 evaluation; 06-11 further analyses, 11 classification metrics under one label policy and the multi-operator, multi-mask counterfactual pass
 results/             result files behind the supplementary tables (analysis/) and the controlled synthetic study
 reproducibility/    table-to-run map and software versions
 tools/               anatomy masks, view filter, labeler QC, tables, figures, supplementary analyses
