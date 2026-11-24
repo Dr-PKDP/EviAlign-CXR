@@ -1,0 +1,17 @@
+run,measure,n,patients,value,lo,hi
+main,side accuracy,467,393,0.8029978586723768,0.7660909962560497,0.8390644098482689
+main,side accuracy: atelectasis,53,48,0.7358490566037735,,
+main,side accuracy: lung_opacity,32,30,0.71875,,
+main,side accuracy: nodule_mass,114,108,0.7894736842105263,,
+main,side accuracy: pleural_effusion,132,123,0.8181818181818182,,
+main,side accuracy: pneumonia,42,41,0.8809523809523809,,
+main,side accuracy: pneumothorax,94,78,0.8297872340425532,,
+main,"vertical position AUC, lower vs upper (163 lower, 103 upper)",266,244,0.7485258204776938,0.6803741540025539,0.8115956906720281
+plain_vlm,side accuracy,448,383,0.78125,0.7424876446872155,0.818394744160178
+plain_vlm,side accuracy: atelectasis,58,54,0.8103448275862069,,
+plain_vlm,side accuracy: lung_opacity,22,21,0.7727272727272727,,
+plain_vlm,side accuracy: nodule_mass,109,103,0.7064220183486238,,
+plain_vlm,side accuracy: pleural_effusion,127,121,0.8031496062992126,,
+plain_vlm,side accuracy: pneumonia,40,39,0.925,,
+plain_vlm,side accuracy: pneumothorax,92,77,0.7608695652173914,,
+plain_vlm,"vertical position AUC, lower vs upper (145 lower, 75 upper)",220,203,0.8110344827586207,0.7394607247844875,0.8706973256325778

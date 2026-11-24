@@ -75,6 +75,18 @@ def param_groups(model, cfg):
             {"params": dec, "lr": T.get("lr_decoder", 1e-4)}]
 
 
+def _gnorm(ps, device):
+    gs = [p.grad.detach().float().norm() for p in ps if p.grad is not None]
+    return torch.stack(gs).norm() if gs else torch.zeros((), device=device)
+
+
+def _clip_summary(st):
+    n = max(st["n"], 1)
+    return {"clip_frac_cls": st["cls"] / n, "clip_frac_dec": st["dec"] / n,
+            "gn_cls_mean": st["g_cls"] / n, "gn_dec_mean": st["g_dec"] / n,
+            "clip_frac_global": st["glob"] / n, "global_scale_mean": st["glob_scale"] / n}
+
+
 @torch.no_grad()
 def validate(model, loader, device, classes, amp_dtype, max_batches=None):
     model.eval()
@@ -145,6 +157,8 @@ def main():
     if ddp:
         obj = torch.nn.parallel.DistributedDataParallel(obj, device_ids=[local], find_unused_parameters=True)
     core = model
+    cls_params = [p for n, p in core.named_parameters() if p.requires_grad and n.startswith(("encoder.", "head."))]
+    dec_params = [p for n, p in core.named_parameters() if p.requires_grad and not n.startswith(("encoder.", "head."))]
 
     opt = torch.optim.AdamW(param_groups(core, cfg), weight_decay=T.get("weight_decay", 0.05))
     steps_per_epoch = len(tl) // T.get("grad_accum", 1)
@@ -167,6 +181,7 @@ def main():
         if sampler:
             sampler.set_epoch(epoch)
         t0 = time.time()
+        clip_stats = {"n": 0, "cls": 0.0, "dec": 0.0, "g_cls": 0.0, "g_dec": 0.0, "glob": 0.0, "glob_scale": 0.0}
         for it, b in enumerate(tl):
             frac_epoch = epoch + it / max(len(tl), 1)
             w = weights_for_epoch(cfg, frac_epoch)
@@ -184,7 +199,26 @@ def main():
                 continue
             (L["total"] / T.get("grad_accum", 1)).backward()
             if (it + 1) % T.get("grad_accum", 1) == 0:
-                gnorm = torch.nn.utils.clip_grad_norm_(core.parameters(), T.get("clip", 1.0))
+                clip = T.get("clip", 1.0)
+                g_cls, g_dec = _gnorm(cls_params, device), _gnorm(dec_params, device)
+                if T.get("clip_mode", "global") == "separate":
+                    c_cls, c_dec = T.get("clip_cls", clip), T.get("clip_dec", clip)
+                    torch.nn.utils.clip_grad_norm_(cls_params, c_cls)
+                    torch.nn.utils.clip_grad_norm_(dec_params, c_dec)
+                    gnorm = torch.sqrt(g_cls ** 2 + g_dec ** 2)
+                    sc_cls, sc_dec = min(1.0, float(c_cls / (g_cls + 1e-6))), min(1.0, float(c_dec / (g_dec + 1e-6)))
+                else:
+                    gnorm = torch.nn.utils.clip_grad_norm_(core.parameters(), clip)
+                    sc_cls = sc_dec = min(1.0, float(clip / (gnorm + 1e-6)))
+                if torch.isfinite(gnorm):
+                    clip_stats["n"] += 1
+                    clip_stats["cls"] += float(sc_cls < 1.0)
+                    clip_stats["dec"] += float(sc_dec < 1.0)
+                    clip_stats["g_cls"] += float(g_cls)
+                    clip_stats["g_dec"] += float(g_dec)
+                    gs = min(1.0, float(clip / (torch.sqrt(g_cls ** 2 + g_dec ** 2) + 1e-6)))   # scale a global clip would apply
+                    clip_stats["glob"] += float(gs < 1.0)
+                    clip_stats["glob_scale"] += gs
                 if not torch.isfinite(gnorm):
                     # finite loss, non-finite gradient (e.g. 0/0 in a normalisation backward): drop the update
                     opt.zero_grad(set_to_none=True)
@@ -197,7 +231,8 @@ def main():
                 step += 1
             if rank == 0 and it % T.get("log_every", 50) == 0:
                 rec = {"epoch": round(frac_epoch, 3), "step": step, **{k: float(v) for k, v in L.items() if not k.startswith("_")},
-                       **{f"w_{k}": v for k, v in w.items()}, "lr": sched.get_last_lr()[0], "sec": round(time.time() - t0, 1),
+                       **{f"w_{k}": v for k, v in w.items()}, "gn_cls": float(g_cls), "gn_dec": float(g_dec),
+                       "clip_scale_cls": sc_cls, "clip_scale_dec": sc_dec, "lr": sched.get_last_lr()[0], "sec": round(time.time() - t0, 1),
                        "gpu_gb": round(torch.cuda.max_memory_allocated() / 1e9, 1) if device.type == "cuda" else 0.0}
                 print(json.dumps(rec), flush=True)
                 log.write(json.dumps(rec) + "\n"), log.flush()
@@ -207,7 +242,7 @@ def main():
             rep = validate(core, vl, device, classes, amp_dtype, T.get("val_max_batches"))
             auc = rep["macro"]["auroc"]
             rec = {"epoch": epoch, "val_macro_auroc": auc, "nonfinite_frac": rep.get("nonfinite_frac", 0.0),
-                   "skipped_nonfinite": n_skipped, "val_per_class": {k: v["auroc"] for k, v in rep["per_class"].items()}}
+                   "skipped_nonfinite": n_skipped, **_clip_summary(clip_stats), "val_per_class": {k: v["auroc"] for k, v in rep["per_class"].items()}}
             print(json.dumps(rec), flush=True)
             log.write(json.dumps(rec) + "\n"), log.flush()
             ck = {"model": core.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "epoch": epoch,

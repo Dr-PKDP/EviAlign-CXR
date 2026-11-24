@@ -1,0 +1,3 @@
+base: ../main.yaml
+output_dir: runs/abl_minimal
+loss: {w_inst: 0.0, w_anat: 0.0, w_suff: 0.0, w_comp: 0.0}
