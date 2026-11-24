@@ -1,0 +1,5 @@
+# Tuberculosis corpora (abnormality AUROC; TBX11K also scored against TB boxes)
+sets:
+  - {name: shenzhen, manifest: manifests/shenzhen.csv, split: test}
+  - {name: montgomery, manifest: manifests/montgomery.csv, split: test}
+  - {name: tbx11k_val, manifest: manifests/tbx11k.csv, split: test}

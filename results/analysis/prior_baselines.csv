@@ -1,0 +1,49 @@
+set,finding,map,pairs,hit,energy,mass_area_ratio
+chestxdet,atelectasis,box prior (leave one out),297,0.337,0.125,3.532
+chestxdet,atelectasis,central Gaussian,297,0.121,0.064,1.598
+chestxdet,atelectasis,centre point,297,0.121,0.044,0.0
+chestxdet,consolidation,box prior (leave one out),1629,0.638,0.302,2.569
+chestxdet,consolidation,central Gaussian,1629,0.274,0.205,1.661
+chestxdet,consolidation,centre point,1629,0.274,0.113,0.207
+chestxdet,emphysema,box prior (leave one out),176,0.949,0.586,1.864
+chestxdet,emphysema,central Gaussian,176,0.614,0.478,1.499
+chestxdet,emphysema,centre point,176,0.614,0.347,0.998
+chestxdet,fibrosis,box prior (leave one out),499,0.455,0.215,2.473
+chestxdet,fibrosis,central Gaussian,499,0.136,0.143,1.489
+chestxdet,fibrosis,centre point,499,0.136,0.063,0.0
+chestxdet,nodule_mass,box prior (leave one out),482,0.189,0.04,2.765
+chestxdet,nodule_mass,central Gaussian,482,0.064,0.025,1.655
+chestxdet,nodule_mass,centre point,482,0.064,0.013,0.0
+chestxdet,pleural_effusion,box prior (leave one out),1428,0.526,0.228,2.398
+chestxdet,pleural_effusion,central Gaussian,1428,0.153,0.146,1.329
+chestxdet,pleural_effusion,centre point,1428,0.153,0.072,0.0
+chestxdet,pneumothorax,box prior (leave one out),189,0.323,0.111,3.358
+chestxdet,pneumothorax,central Gaussian,189,0.048,0.05,1.125
+chestxdet,pneumothorax,centre point,189,0.048,0.015,0.0
+nih_test,atelectasis,box prior (leave one out),180,0.278,0.102,3.432
+nih_test,atelectasis,central Gaussian,180,0.133,0.056,1.72
+nih_test,atelectasis,centre point,180,0.133,0.063,0.0
+nih_test,cardiomegaly,box prior (leave one out),146,1.0,0.667,3.901
+nih_test,cardiomegaly,central Gaussian,146,0.973,0.349,2.012
+nih_test,cardiomegaly,centre point,146,0.973,0.933,5.401
+nih_test,lung_opacity,box prior (leave one out),123,0.561,0.236,2.662
+nih_test,lung_opacity,central Gaussian,123,0.325,0.169,1.81
+nih_test,lung_opacity,centre point,123,0.325,0.239,0.228
+nih_test,nodule_mass,box prior (leave one out),164,0.201,0.065,2.606
+nih_test,nodule_mass,central Gaussian,164,0.134,0.043,1.577
+nih_test,nodule_mass,centre point,164,0.134,0.063,0.0
+nih_test,pleural_effusion,box prior (leave one out),153,0.392,0.16,2.472
+nih_test,pleural_effusion,central Gaussian,153,0.046,0.089,1.225
+nih_test,pleural_effusion,centre point,153,0.046,0.033,0.0
+nih_test,pneumonia,box prior (leave one out),119,0.529,0.228,2.685
+nih_test,pneumonia,central Gaussian,119,0.227,0.161,1.738
+nih_test,pneumonia,centre point,119,0.227,0.172,0.05
+nih_test,pneumothorax,box prior (leave one out),98,0.337,0.13,2.599
+nih_test,pneumothorax,central Gaussian,98,0.071,0.066,1.098
+nih_test,pneumothorax,centre point,98,0.071,0.019,0.0
+rsna,lung_opacity,box prior (leave one out),7106,0.666,0.282,2.701
+rsna,lung_opacity,central Gaussian,7106,0.309,0.189,1.725
+rsna,lung_opacity,centre point,7106,0.309,0.15,0.312
+rsna,pneumonia,box prior (leave one out),7106,0.666,0.282,2.701
+rsna,pneumonia,central Gaussian,7106,0.309,0.189,1.725
+rsna,pneumonia,centre point,7106,0.309,0.15,0.312

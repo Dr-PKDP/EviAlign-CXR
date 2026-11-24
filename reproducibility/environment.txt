@@ -1,0 +1,9 @@
+# Software used for the reported runs (conda environment "evialign", Python 3.11, one NVIDIA H200 NVL GPU)
+torch==2.6.0+cu124
+torchvision==0.21.0+cu124
+timm==1.0.31
+transformers==5.22.1
+peft==0.21.2
+numpy==2.4.6
+scikit-learn==1.9.1
+torchxrayvision==1.5.7

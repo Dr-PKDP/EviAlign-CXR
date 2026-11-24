@@ -1,0 +1,4 @@
+# gradients of the alignment term also reach the classifier evidence (no stop-gradient)
+base: ../main.yaml
+output_dir: runs/abl_bidirectional
+loss: {align_stop_grad: false}

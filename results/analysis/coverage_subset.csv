@@ -1,0 +1,7 @@
+system,set,images,above_gate,after_cap,asserted,asserted_not_selected,eligible,scored
+Unguided VLM,NIH-14,3200,11904,7767,7799,32,4691,4618
+Unguided VLM,ChestX-Det10,3200,11326,7337,7383,46,3943,3943
+Unguided VLM,RSNA,3200,7314,5205,5234,29,2789,2789
+EviAlign-CXR,NIH-14,3200,11368,7752,7808,56,5481,5270
+EviAlign-CXR,ChestX-Det10,3200,10787,7349,7411,62,4756,4749
+EviAlign-CXR,RSNA,3200,7000,5215,5251,36,3236,3236

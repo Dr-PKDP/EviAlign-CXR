@@ -1,0 +1,5 @@
+# Seeded patient-random subsets for the counterfactual passes: patients are drawn in a random order (seed 0) and all of a patient's images are kept until 3,200 images are reached.
+sets:
+  - {name: nih_test, manifest: manifests/nih.csv, split: test, patient_sample: {n_images: 3200, seed: 0}}
+  - {name: chestxdet, manifest: manifests/chestxdet.csv, split: test, patient_sample: {n_images: 3200, seed: 0}}
+  - {name: rsna, manifest: manifests/rsna.csv, split: test, patient_sample: {n_images: 3200, seed: 0}}

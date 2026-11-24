@@ -1,0 +1,5 @@
+# Sets with localisation annotations, used for the matched-ablation and removal-operator passes (first 100 batches of each, fixed subset).
+sets:
+  - {name: nih_test, manifest: manifests/nih.csv, split: test}
+  - {name: chestxdet, manifest: manifests/chestxdet.csv, split: test}
+  - {name: rsna, manifest: manifests/rsna.csv, split: test}

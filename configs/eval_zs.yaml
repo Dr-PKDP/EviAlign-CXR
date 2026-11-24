@@ -1,0 +1,4 @@
+# Sets for the zero-shot VLM baseline (2,000-image random subsets, seed 0)
+sets:
+  - {name: nih_test, manifest: manifests/nih.csv, split: test}
+  - {name: iu, manifest: manifests/iu.csv, split: test}

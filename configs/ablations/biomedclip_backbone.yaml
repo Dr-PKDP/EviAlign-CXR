@@ -1,0 +1,4 @@
+base: ../main.yaml
+output_dir: runs/abl_biomedclip
+data: {image_size: 448}
+model: {backbone: "openclip:hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224", memory_grid: 14}

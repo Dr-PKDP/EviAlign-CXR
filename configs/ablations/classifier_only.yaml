@@ -1,0 +1,6 @@
+# classifier with the evidence head only (Grad-CAM / evidence / template-text baselines)
+base: ../main.yaml
+output_dir: runs/classifier_only
+model: {decoder: {type: none}}
+loss: {w_lm: 0.0, w_align: 0.0, w_inst: 0.0, w_suff: 0.0, w_comp: 0.0, w_anat: 0.0}
+train: {stages: {cls_only_epochs: 0, align_start_epoch: 0, align_ramp_epochs: 1, sc_start_epoch: 99}, select_from_epoch: 0}
