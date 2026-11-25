@@ -16,7 +16,7 @@ ALLS="--sets configs/eval_sets.yaml"
 OPS="--infill_multi noise,blur,mean --del_frac 0.15 --max_pairs_per_batch 512 --rand_key --ecs_split --n_ecs_masks 5"
 ev () { # run subdir [args...]
   local r=$1 n=$2 d=runs/$1/$2; shift 2
-  if [ -f runs/$r/best.pt ] && [ ! -f $d/DONE ]; then
+  if [ -f runs/$r/TRAINED ] && [ -f runs/$r/best.pt ] && [ ! -f $d/DONE ]; then
     mkdir -p $d
     python evaluate.py --ckpt runs/$r/best.pt --out $d --resume "$@" > logs/eval_${r}_${n}.log 2>&1 && touch $d/DONE
   fi
