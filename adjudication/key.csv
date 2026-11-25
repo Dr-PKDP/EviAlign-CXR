@@ -1,0 +1,91 @@
+case,set,idx,finding,control,donor_idx,donor_finding,arm_A,arm_B,arm_C,text_guided,text_unguided,text_template
+case_001,chestxdet,2180,pleural_effusion,0,2180,pleural_effusion,unguided,template,guided,There is a pleural effusion on the right.,There is a pleural effusion on the right.,There is a pleural effusion.
+case_002,rsna,10184,lung_opacity,0,10184,lung_opacity,guided,unguided,template,There is an airspace opacity throughout the right lung and in the left lower lobe.,There is an airspace opacity in the right upper lobe.,There is an airspace opacity.
+case_003,rsna,10513,pneumonia,0,10513,pneumonia,guided,unguided,template,There is pneumonia in the left lower lobe.,There is pneumonia in the lingula.,There is pneumonia.
+case_004,rsna,10941,pneumonia,0,10941,pneumonia,unguided,guided,template,There is pneumonia in the left lower lobe.,There is pneumonia in the left lower lobe.,There is pneumonia.
+case_005,rsna,26773,lung_opacity,0,26773,lung_opacity,unguided,template,guided,There is an airspace opacity in the left lower lobe.,"There is pulmonary edema and bilateral airspace disease, left greater than right.",There is an airspace opacity.
+case_006,chestxdet,554,fibrosis,0,554,fibrosis,unguided,template,guided,There is pulmonary fibrosis.,There is pulmonary fibrosis in the left upper lobe.,There is pulmonary fibrosis.
+case_007,rsna,27346,lung_opacity,0,27346,lung_opacity,unguided,template,guided,There is an airspace opacity in the left upper lobe.,There is an airspace opacity in the left upper lobe.,There is an airspace opacity.
+case_008,nih_test,18879,cardiomegaly,1,14395,pleural_effusion,template,unguided,guided,There is consolidation in the right lower lobe with a small right pleural effusion.,There is a pleural effusion on the right.,There is a pleural effusion.
+case_009,rsna,25668,lung_opacity,0,25668,lung_opacity,unguided,template,guided,There is an airspace opacity in the right base.,There is an airspace opacity in the right lower lobe.,There is an airspace opacity.
+case_010,nih_test,7494,pneumothorax,0,7494,pneumothorax,unguided,guided,template,There is a pneumothorax on the left side.,There is a pneumothorax on the left measuring approximately 10%.,There is a pneumothorax.
+case_011,nih_test,2825,cardiomegaly,1,15165,pneumonia,unguided,template,guided,There is pneumonia in the right middle lobe.,There is pneumonia in the right middle lobe.,There is pneumonia.
+case_012,nih_test,2825,cardiomegaly,0,2825,cardiomegaly,guided,unguided,template,The heart is enlarged.,The heart is enlarged.,The heart is enlarged.
+case_013,nih_test,2474,nodule_mass,0,2474,nodule_mass,unguided,guided,template,There is a pulmonary nodule in the right upper lobe.,There is a pulmonary nodule in the right upper lobe.,There is a pulmonary nodule.
+case_014,rsna,29316,pneumonia,0,29316,pneumonia,guided,template,unguided,There is pneumonia in the left mid and lower lung zones.,There is pneumonia in the left upper lobe.,There is pneumonia.
+case_015,rsna,12041,pneumonia,0,12041,pneumonia,guided,unguided,template,There is pneumonia in the right upper lobe.,There is pneumonia in the right upper lobe.,There is pneumonia.
+case_016,chestxdet,137,pleural_effusion,0,137,pleural_effusion,unguided,guided,template,There is consolidation in the right lower lobe with small right effusion.,There is a pleural effusion on the right.,There is a pleural effusion.
+case_017,rsna,11742,lung_opacity,0,11742,lung_opacity,unguided,guided,template,There is an airspace opacity in the right upper lobe.,There is an airspace opacity in the right upper lobe.,There is an airspace opacity.
+case_018,chestxdet,1875,atelectasis,0,1875,atelectasis,unguided,template,guided,There is atelectasis at the left lung base.,There is atelectasis at the left lung base.,There is atelectasis.
+case_019,nih_test,10104,nodule_mass,1,17918,cardiomegaly,template,guided,unguided,The heart is enlarged.,The heart is enlarged.,The heart is enlarged.
+case_020,chestxdet,3221,emphysema,0,3221,emphysema,template,guided,unguided,There is emphysema.,There is emphysema.,There is emphysema.
+case_021,nih_test,15003,atelectasis,1,14395,pleural_effusion,unguided,guided,template,There is consolidation in the right lower lobe with a small right pleural effusion.,There is a pleural effusion on the right.,There is a pleural effusion.
+case_022,chestxdet,3534,atelectasis,0,3534,atelectasis,guided,unguided,template,There is atelectasis at both lung bases.,There is atelectasis at the right base.,There is atelectasis.
+case_023,chestxdet,3534,atelectasis,1,1943,pleural_effusion,template,guided,unguided,There is a pleural effusion on the left.,There is a pleural effusion on the left.,There is a pleural effusion.
+case_024,nih_test,15681,atelectasis,0,15681,atelectasis,guided,template,unguided,There is atelectasis at the left lung base.,There is atelectasis at the left lung base.,There is atelectasis.
+case_025,nih_test,14155,cardiomegaly,0,14155,cardiomegaly,guided,template,unguided,The heart is enlarged.,The heart is enlarged.,The heart is enlarged.
+case_026,nih_test,4757,atelectasis,0,4757,atelectasis,guided,unguided,template,There is atelectasis at the left lung base.,There is atelectasis at the left lung base.,There is atelectasis.
+case_027,chestxdet,2166,emphysema,1,834,pneumothorax,unguided,guided,template,There is a pneumothorax on the right.,There is a pneumothorax on the left.,There is a pneumothorax.
+case_028,chestxdet,692,atelectasis,1,3472,emphysema,unguided,guided,template,There is emphysema.,There is emphysema.,There is emphysema.
+case_029,rsna,12358,lung_opacity,0,12358,lung_opacity,template,guided,unguided,There is an airspace opacity in the right upper lobe.,There is an airspace opacity in the right upper lobe.,There is an airspace opacity.
+case_030,rsna,26657,pneumonia,0,26657,pneumonia,guided,template,unguided,There is pneumonia in the right upper lobe.,There is pneumonia in the right upper lobe.,There is pneumonia.
+case_031,nih_test,2474,nodule_mass,1,6565,pneumonia,guided,unguided,template,There is pneumonia in the right lower lobe.,There is pneumonia in the left lower lobe.,There is pneumonia.
+case_032,nih_test,2312,lung_opacity,0,2312,lung_opacity,guided,unguided,template,There is an airspace opacity in the left mid lung zone.,There is an airspace opacity in the left lower lobe.,There is an airspace opacity.
+case_033,rsna,15391,lung_opacity,0,15391,lung_opacity,guided,template,unguided,There is an airspace opacity in the left lower lobe.,There is an airspace opacity in the left lower lobe.,There is an airspace opacity.
+case_034,chestxdet,154,fibrosis,1,2180,pleural_effusion,unguided,guided,template,There is a pleural effusion on the right.,There is a pleural effusion on the right.,There is a pleural effusion.
+case_035,chestxdet,834,pneumothorax,0,834,pneumothorax,guided,unguided,template,There is a pneumothorax on the right.,There is a pneumothorax on the left.,There is a pneumothorax.
+case_036,rsna,29377,lung_opacity,0,29377,lung_opacity,template,guided,unguided,There is an airspace opacity in the right upper lobe.,There is an airspace opacity in the right upper lobe.,There is an airspace opacity.
+case_037,nih_test,14395,pleural_effusion,0,14395,pleural_effusion,guided,unguided,template,There is consolidation in the right lower lobe with a small right pleural effusion.,There is a pleural effusion on the right.,There is a pleural effusion.
+case_038,nih_test,15165,pneumonia,0,15165,pneumonia,unguided,template,guided,There is pneumonia in the right middle lobe.,There is pneumonia in the right middle lobe.,There is pneumonia.
+case_039,nih_test,7078,lung_opacity,1,19163,pleural_effusion,template,unguided,guided,There is a pleural effusion on the right.,There is a pleural effusion on the right.,There is a pleural effusion.
+case_040,nih_test,18879,cardiomegaly,0,18879,cardiomegaly,unguided,guided,template,The heart is enlarged.,The heart is enlarged.,The heart is enlarged.
+case_041,nih_test,18543,pneumothorax,0,18543,pneumothorax,guided,template,unguided,There is a pneumothorax on the left side.,There is a pneumothorax on the left measuring approximately 10%.,There is a pneumothorax.
+case_042,chestxdet,1753,nodule_mass,1,3346,consolidation,template,unguided,guided,There is consolidation in the right upper lobe.,There is consolidation in the right upper lobe.,There is consolidation.
+case_043,rsna,13042,pneumonia,0,13042,pneumonia,template,guided,unguided,There is pneumonia in the right lower lobe.,There is pneumonia in the right lower lobe.,There is pneumonia.
+case_044,rsna,7791,lung_opacity,0,7791,lung_opacity,guided,template,unguided,There is an airspace opacity in the right upper lobe.,There is an airspace opacity in the left mid and lower lung zones.,There is an airspace opacity.
+case_045,chestxdet,1433,emphysema,0,1433,emphysema,unguided,template,guided,There is emphysema with hyperinflation.,There is emphysema.,There is emphysema.
+case_046,chestxdet,3221,emphysema,1,834,pneumothorax,guided,template,unguided,There is a pneumothorax on the right.,There is a pneumothorax on the left.,There is a pneumothorax.
+case_047,nih_test,19693,nodule_mass,0,19693,nodule_mass,template,guided,unguided,There is a pulmonary nodule in the left lower lobe.,There is a pulmonary nodule in the right lower lobe.,There is a pulmonary nodule.
+case_048,chestxdet,3542,consolidation,1,1943,pleural_effusion,template,unguided,guided,There is a pleural effusion on the left.,There is a pleural effusion on the left.,There is a pleural effusion.
+case_049,chestxdet,1943,pleural_effusion,0,1943,pleural_effusion,unguided,template,guided,There is a pleural effusion on the left.,There is a pleural effusion on the left.,There is a pleural effusion.
+case_050,nih_test,17918,cardiomegaly,0,17918,cardiomegaly,unguided,guided,template,The heart is enlarged.,The heart is enlarged.,The heart is enlarged.
+case_051,chestxdet,1919,atelectasis,1,3472,emphysema,guided,template,unguided,There is emphysema.,There is emphysema.,There is emphysema.
+case_052,nih_test,6565,pneumonia,0,6565,pneumonia,guided,unguided,template,There is pneumonia in the right lower lobe.,There is pneumonia in the left lower lobe.,There is pneumonia.
+case_053,chestxdet,692,atelectasis,0,692,atelectasis,unguided,template,guided,There is atelectasis at the left lung base.,There is atelectasis at the left lung base.,There is atelectasis.
+case_054,rsna,9578,pneumonia,0,9578,pneumonia,guided,unguided,template,There is pneumonia in the right lower lobe.,There is pneumonia in the right lower lobe.,There is pneumonia.
+case_055,chestxdet,2166,emphysema,0,2166,emphysema,unguided,guided,template,There is emphysema.,There is emphysema.,There is emphysema.
+case_056,rsna,6846,pneumonia,0,6846,pneumonia,guided,template,unguided,There is pneumonia in the left lower lobe.,There is pneumonia in the left lower lobe.,There is pneumonia.
+case_057,chestxdet,3542,consolidation,0,3542,consolidation,unguided,template,guided,There is consolidation in the right lower lobe with small right effusion.,There is consolidation in the right lower lobe with a small right pleural effusion.,There is consolidation.
+case_058,rsna,5981,pneumonia,0,5981,pneumonia,template,guided,unguided,There is pneumonia in the left upper lobe.,There is pneumonia in the left lower lobe.,There is pneumonia.
+case_059,nih_test,5297,atelectasis,0,5297,atelectasis,unguided,template,guided,There is atelectasis in the left base.,There is atelectasis in the left base.,There is atelectasis.
+case_060,chestxdet,3346,consolidation,0,3346,consolidation,unguided,template,guided,There is consolidation in the right upper lobe.,There is consolidation in the right upper lobe.,There is consolidation.
+case_061,nih_test,19163,pleural_effusion,0,19163,pleural_effusion,unguided,template,guided,There is a pleural effusion on the right.,There is a pleural effusion on the right.,There is a pleural effusion.
+case_062,chestxdet,1483,fibrosis,0,1483,fibrosis,unguided,template,guided,There is pulmonary fibrosis.,There is pulmonary fibrosis in the lung bases.,There is pulmonary fibrosis.
+case_063,chestxdet,1744,consolidation,0,1744,consolidation,template,unguided,guided,There is consolidation in the left lower lobe.,There is consolidation in the left lower lobe.,There is consolidation.
+case_064,rsna,26940,lung_opacity,0,26940,lung_opacity,template,guided,unguided,There is an airspace opacity in the right lower lobe.,There is an airspace opacity in the right lower lobe.,There is an airspace opacity.
+case_065,chestxdet,1976,nodule_mass,0,1976,nodule_mass,unguided,guided,template,There is a pulmonary nodule in the right lower lobe.,There is a pulmonary nodule in the right lower lobe.,There is a pulmonary nodule.
+case_066,rsna,29563,pneumonia,0,29563,pneumonia,template,guided,unguided,There is pneumonia in the right upper lobe.,There is pneumonia in the right upper lobe.,There is pneumonia.
+case_067,chestxdet,3450,pneumothorax,0,3450,pneumothorax,guided,unguided,template,There is a pneumothorax on the right.,There is a pneumothorax on the right measuring approximately 10%.,There is a pneumothorax.
+case_068,nih_test,1527,pneumothorax,0,1527,pneumothorax,unguided,guided,template,There is a pneumothorax on the right.,There is a pneumothorax on the right measuring approximately 10%.,There is a pneumothorax.
+case_069,chestxdet,2264,pneumothorax,0,2264,pneumothorax,template,guided,unguided,There is a pneumothorax on the right.,There is a pneumothorax on the right.,There is a pneumothorax.
+case_070,nih_test,7494,pneumothorax,1,1930,pneumonia,guided,unguided,template,There is pneumonia in the right middle lobe.,There is pneumonia in the left lower lobe.,There is pneumonia.
+case_071,chestxdet,1943,pleural_effusion,1,1744,consolidation,template,guided,unguided,There is consolidation in the left lower lobe.,There is consolidation in the left lower lobe.,There is consolidation.
+case_072,rsna,29487,lung_opacity,0,29487,lung_opacity,unguided,guided,template,There is an airspace opacity in the right upper lobe.,There is an airspace opacity in the right upper lobe.,There is an airspace opacity.
+case_073,nih_test,23699,lung_opacity,0,23699,lung_opacity,unguided,template,guided,There is an airspace opacity in the right lower lobe.,There is an airspace opacity in the right lower lobe.,There is an airspace opacity.
+case_074,chestxdet,154,fibrosis,0,154,fibrosis,guided,unguided,template,There is pulmonary fibrosis.,There is pulmonary fibrosis in the right upper lobe.,There is pulmonary fibrosis.
+case_075,chestxdet,3472,emphysema,0,3472,emphysema,template,unguided,guided,There is emphysema.,There is emphysema.,There is emphysema.
+case_076,rsna,8450,pneumonia,0,8450,pneumonia,unguided,template,guided,There is pneumonia in the right upper lobe.,There is pneumonia in the right upper lobe.,There is pneumonia.
+case_077,chestxdet,1919,atelectasis,0,1919,atelectasis,guided,template,unguided,There is atelectasis at the right lung base.,There is atelectasis at the right lung base.,There is atelectasis.
+case_078,nih_test,10104,nodule_mass,0,10104,nodule_mass,guided,unguided,template,There is a pulmonary nodule in the left upper lobe.,There is a pulmonary nodule in the right upper lobe.,There is a pulmonary nodule.
+case_079,rsna,15657,pneumonia,0,15657,pneumonia,unguided,template,guided,There is pneumonia in the right middle lobe.,There is pneumonia in the right middle lobe.,There is pneumonia.
+case_080,chestxdet,85,nodule_mass,0,85,nodule_mass,template,guided,unguided,There is a pulmonary nodule in the left lower lobe.,There is a pulmonary nodule in the right upper lobe.,There is a pulmonary nodule.
+case_081,chestxdet,1875,atelectasis,1,1753,nodule_mass,unguided,guided,template,There is a pulmonary nodule in the left upper lobe.,There is a pulmonary nodule in the left upper lobe.,There is a pulmonary nodule.
+case_082,nih_test,1930,pneumonia,0,1930,pneumonia,unguided,template,guided,There is pneumonia in the right middle lobe.,There is pneumonia in the left lower lobe.,There is pneumonia.
+case_083,rsna,28935,lung_opacity,0,28935,lung_opacity,unguided,guided,template,There is an airspace opacity in the left lower lobe.,There is an airspace opacity in the left lower lobe.,There is an airspace opacity.
+case_084,nih_test,7078,lung_opacity,0,7078,lung_opacity,guided,unguided,template,There is an airspace opacity in the right lower lobe.,There is an airspace opacity in the left lower lobe.,There is an airspace opacity.
+case_085,chestxdet,1753,nodule_mass,0,1753,nodule_mass,template,unguided,guided,There is a pulmonary nodule in the left upper lobe.,There is a pulmonary nodule in the left upper lobe.,There is a pulmonary nodule.
+case_086,chestxdet,1488,consolidation,0,1488,consolidation,guided,unguided,template,There is consolidation in the left lower lobe with left pleural effusion.,There is consolidation in the left lower lobe with small left pleural effusion.,There is consolidation.
+case_087,nih_test,19068,lung_opacity,0,19068,lung_opacity,template,unguided,guided,There is an airspace opacity in the right upper lobe.,There is an airspace opacity in the right upper lobe.,There is an airspace opacity.
+case_088,nih_test,15003,atelectasis,0,15003,atelectasis,guided,template,unguided,There is atelectasis at the left lung base.,There is atelectasis at the left lung base.,There is atelectasis.
+case_089,nih_test,1527,pneumothorax,1,14395,pleural_effusion,template,unguided,guided,There is consolidation in the right lower lobe with a small right pleural effusion.,There is a pleural effusion on the right.,There is a pleural effusion.
+case_090,nih_test,20336,pleural_effusion,0,20336,pleural_effusion,unguided,guided,template,There is a pleural effusion on the left.,There is a pleural effusion on the left.,There is a pleural effusion.
