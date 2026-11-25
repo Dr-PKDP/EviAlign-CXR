@@ -20,11 +20,26 @@ import argparse
 import glob
 import itertools
 import os
+import re
 
 import numpy as np
 import pandas as pd
 
 SYS = ["guided", "unguided", "template"]
+
+
+COLS = ["case", "finding_present", "sentence_A", "highlight_A", "sentence_B", "highlight_B", "sentence_C", "highlight_C", "preferred"]
+
+
+def parse_ratings(f):
+    """Keep only lines that start with case_<n> and carry the nine rating fields (extra trailing fields such as reader and comment are
+    read when present); prose, blank lines and repeated headers are ignored."""
+    rows = []
+    for line in open(f, encoding="utf-8-sig"):
+        p = [x.strip() for x in line.strip().strip("`").split(",")]
+        if len(p) >= 9 and re.match(r"case_\d+$", p[0]):
+            rows.append(p[:9] + [p[9] if len(p) > 9 else ""])
+    return pd.DataFrame(rows, columns=COLS + ["reader"]).fillna("")
 
 
 def load(dir_, key):
@@ -33,9 +48,9 @@ def load(dir_, key):
         name = os.path.basename(f)[8:-4]
         if name == "template":
             continue
-        R = pd.read_csv(f, dtype=str).fillna("")
+        R = parse_ratings(f)
         R = R[R.case.isin(key.index)].drop_duplicates("case", keep="last")
-        R["reader"] = [r if r.strip() else name for r in R.get("reader", pd.Series([""] * len(R), index=R.index))]
+        R["reader"] = [r if str(r).strip() else name for r in R.reader]
         n_bad = 0
         for c in R.columns:
             if c.startswith(("sentence_", "highlight_")):
