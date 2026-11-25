@@ -38,7 +38,7 @@ Script 13 trains the controls for side conditions of the alignment objective (se
 branches, a minimal objective, and full-protocol seed replicates with `FULL=1`); script 14 evaluates them and
 `tools/limitation_runs_summary.py` tabulates them. `tools/sentence_location_checks.py` checks laterality and vertical position of the generated
 sentences against the NIH boxes and compares single- with multi-finding sentences. `tools/adjudication_package.py` builds a blinded case set
-with mismatched controls for human or model raters and `tools/adjudication_analysis.py` summarises the completed sheets. The ratings used in the study (four language-model raters, 72 real pairs and 18 controls) and their key are in `adjudication/`; `python tools/adjudication_analysis.py --dir adjudication --out results/analysis` reproduces Supplementary Table S41.
+with mismatched controls for human or model raters and `tools/adjudication_analysis.py` summarises the completed sheets. The ratings used in the study (three language-model raters, 72 real pairs and 18 controls) and their key are in `adjudication/`; `python tools/adjudication_analysis.py --dir adjudication --out results/analysis` reproduces Supplementary Table S41.
 The fixed evaluation subsets are the first 100 batches of 32 images of each test list in manifest order (`--max_batches 100`);
 their thresholds and generation gate are fitted on the first 3,200 validation images, whereas the full-test passes and script 12 use the
 full validation split. Random-removal masks are keyed to (image, finding, replicate) with `--rand_key`, which the primary subset passes do not use.
